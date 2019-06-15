@@ -519,3 +519,43 @@ Reihenfolge)
 # Sie können mit der Sprache Cypher Datendefinitionen realisieren und Anfragen formulieren.
 
 # Sie können das Datenmodell des Resource Description Frameworks anhand eines Beispiels erläutern.
+
+- Alles, was benannt werden kann, ist eine Ressource
+- Global eindeutige Namen durch URI bzw. IRI
+- Konstruktion von Aussagen mit Subjekt, Prädikat und Objekt
+- Subjekt und Prädikat sind immer Ressourcen.
+- Das Objekt kann entweder eine Ressource oder ein Literal sein
+- Dargestellt als gerichteter Graph
+- Knoten: Subjekt, Objekt
+- Kanten: Prädikat
+\newline
+
+```
+xml
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:lit="http://www.SampleLiteratur.rdf#">
+
+  <rdf:Descriptionrdf:about="http://www.SampleLiteratur.rdf#UmbertoEco">
+    <lit:Autor_von rdf:resource="http://www.SampleLiteratur.rdf#DerNameDerRose"/>
+    <lit:Name>Umberto Eco</lit:Name>
+  </rdf:Description>
+</rdf:RDF>
+```
+
+|Property | Description |
+|:--------|:------------|
+|rdf:type |The subject is an instance of a class.|
+|rdf:type |The subject is an instance of a class.|
+|rdf:Statement |The class of RDF statements.|
+|rdf:Property |The class of RDF properties.|
+|rdf:subject |The subject of the subject RDF statement.|
+|rdf:predicate |The predicate of the subject RDF statement.|
+|rdf:object |The object of the subject RDF statement.|
+|rdfs:Class |The class of classes.|
+|rdfs:domain |A domain of the subject property.|
+|rdfs:range |A range of the subject property.|
+|rdfs:subClassOf |The subject is a subclass of a class.|
+|rdfs:subPropertyOf |The subject is a subproperty of a property.|
+|rdfs:Ressource |The class resource, everything.|
+
