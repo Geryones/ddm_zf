@@ -83,13 +83,85 @@ USING 'ganymed';
 
 ![Entwurfsproblem - Lösung](pics/entwurfsproblem.PNG "hm")
 
-# Sie können eine primäre horizontale Fragmentierung durchführen.
+# Sie können eine primäre horizontale Fragmentierung (PHF) durchführen
 
 ![Horizontale Fragmentierung](pics/horizontal_frag.PNG "hzf")
+
+## Simple predicate p
+
+Vergleich von einem Attribut mit einem Wert
+- bname = 'Siena', preis < 2000
+
+Sind bool'sche Kombinationen von simple Predicates
+
+## Minterm predicate M(P)
+
+Verknüpfen aller simple predicates aus P mit AND und NOT
+- bname = 'Siena', AND NOT (preis <2000)
+
+Mit den Minterms müssen alle Daten abgedeckt werden. 
+- Minterm selectivity: sel(mi)
+  - Anzahl Tupel die mit dem Minterm mi ausgewählt werden
+- Access Frequency acc(mi)
+  - Häufigketi der Anwendung auf Daten mit dem Minterm mi zugreifen
+
+## PHF - 1. Schritt
+
+Finden einer Menge von simple predicates die Vollständig und Minimal sind. 
+
+## PHF - 2. Schritt 
+
+Bilden von minterms
+**Anwendung 1**
+Erfragt Namen und Bestand von Bikes nach Typ: City (4/Woche),
+Trekking (3/Woche), Mountain (2/Woche), Road (1/Woche) \newline
+``` 
+SELECT bname, bestand
+FROM bike s
+WHERE typ = ?
+```
+simple predicates:
+- p1: Typ = 'Road'
+- p2: Typ = 'Mountain'
+- p3: Typ = 'Trekking'
+- p4: Typ = 'City'
+
+**Anwendung 2**
+Verwaltet Bikes mit Preis kleiner 2000 (3/Woche), die restlichen
+Bikes (1/Woche):\newline
+```
+SELECT ∗
+FROM bike s
+WHERE p r e i s ?
+```
+simple predicates:
+- p5: Preis < 2000
+- p6: Preis >= 2000
+
+Aus diesen 6 simple predicates könnten 2^6 = 64 minterm predicates gebildet werden.
+Nur die sinnvollen verwenden, diese definieren dann die Fragmente:
+- BIKES1: σTyp = 'Road' AND Preis 6 2000 (BIKES)
+- BIKES2: σTyp = 'Road' AND Preis > 2000 (BIKES)
+- BIKES3: σTyp = 'Mountain' AND Preis 6 2000 (BIKES)
+- BIKES4: σTyp = 'Mountain' AND Preis > 2000 (BIKES)
+- BIKES5: σTyp = 'Trekking' AND Preis 6 2000 (BIKES)
+- BIKES6: σTyp = 'Trekking' AND Preis > 2000 (BIKES)
+- BIKES7: σTyp = 'City' AND Preis 6 2000 (BIKES)
+- BIKES8: σTyp = 'City' AND Preis > 2000 (BIKES)
+
+## Abgeleitete horizontale Fragementierung (DHF)
+
+Eine horizontale Fragmentierung die von einer anderen Abhängig ist. Dabei wird geschaut, dass Daten die zusammen verwendet werden, auf dem selben Knoten liegen. 
+
 
 # Sie können eine vertikale Fragmentierung durchführen.
 
 ![Vertikale Fragmentierung](pics/vertical_frag.PNG "hm")
+
+Man muss auswerten welche Queries ausgeführt werden, auf welche Attribute, auf welchen Knoten und wie häufig. 
+Um dann entscheiden zu können, welche Attribute werden häufig zusammen verwendet und sollten deshalb zum gleichen Fragment gehören
+
+Für diese Folien siehe Anhang. 
 
 # Sie kennen die Korrektheitsregeln für eine Fragmentierung und können sie auf ein Beispiel anwenden.
 
@@ -500,11 +572,36 @@ Reihenfolge)
 
 # Sie können erläutern, wie in Oracle 12c Replikation mit Materialized Views realisiert wird und welcher Replikations Strategie dies entspricht.
 
+![Materialized View](pics/mview.JPG "hm")
+
+
 # Sie kennen die Kategorisierung der NoSQL Systeme mit den typischen Vertretern.
+
+|Kategorie | Beispiele |
+|:--------|:------------|
+|Dokumentenorientiert |Apache Jackrabbit, MongoDB, OrientDB ...|
+|Graphdatenbanken |Neo4j, OrientDB, ...|
+|Key-Value-Datenbanken | Google BigTable, Amazon Dynamo, memcached, ...|
+|Spaltenorientiere Datenbanken |Apache Cassandra, Google BigTable|
+
 
 # Sie können das CAP-Theorem erläutern.
 
+Eine verteilte Datenbank kann von den 3 Eigenschaften Consistency, Availability und Partition Tolerance immer nur 2 verwirklichen
+
 # Sie kennen das Map/Reduce Verfahren und können dafür typische Anwendungen programmieren.
+
+Hier geht es um das Hadoop-Framework \newLine
+```
+map: (K1, V1) --> list(K2, V2)
+reduce: (K2, list(V2)) --> list(K3, V3)
+```
+Der Output der Map-Funktion ist der Input für Reduce. Diese Typen müssen also übereinstimmen. 
+
+![Schema Hadoop](pics/hadoop.JPG "hm")
+![Word Count with Hadoop](pics/hadoop_2.JPG "hm")
+
+
 
 # Sie kennen die Modellierungsprinzipen für Cassandra und können diese anwenden.
 
