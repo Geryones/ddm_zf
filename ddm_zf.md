@@ -600,10 +600,85 @@ Der Output der Map-Funktion ist der Input für Reduce. Diese Typen müssen also 
 
 ![Schema Hadoop](pics/hadoop.JPG "hm")
 ![Word Count with Hadoop](pics/hadoop_2.JPG "hm")
+\newLine
+
+``` Java
+public static class MyMapper extends Mapper<LongWritable, Text, LongWritable, Text>{
+  private Text word = new Text();
+
+  @Override
+  public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+         String line = value.toString();
+         StringTokenizer tokenizer = new StringTokenizer(line);
+         while (tokenizer.hasMoreTokens()) {
+             word.set(tokenizer.nextToken());
+             context.write(word, 1);
+         }
+     }
+  }
+}
+
+public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
+
+  @Override
+   public void reduce(Text key, Iterable<IntWritable> values, Context context) 
+     throws IOException, InterruptedException {
+       int sum = 0;
+       for (IntWritable val : values) {
+           sum += val.get();
+       }
+       context.write(key, new IntWritable(sum));
+   }
+}
+```
 
 
 
 # Sie kennen die Modellierungsprinzipen für Cassandra und können diese anwenden.
+
+Nicht mehr Relationales Datenmodell, verwendet nicht Tables im klassischen Sinn. 
+
+|Relational Model | Cassandra Model |
+|:--------|:------------|
+|Database |Keyspace|
+|Table |Column Family (CF)|
+|Primary Key |Row Key|
+|Column name |Column name/key|
+|Column value |Column value|
+
+> > But don’t use this analogy while designing Cassandra column families. Instead, think of the Cassandra column family as a map of a map: an outer map keyed by a row key, and an inner map keyed by a column key. Both maps are sorted.
+
+![Cassandra Model](pics/cassandra.JPG "hm")
+
+Da keine Joins und Group By möglich sind, können die gewünschten Daten nicht immer mit einem einzigen Query abgefragt werden. 
+Es kann durchaus zu Redundanzen kommen, was aber nicht weiter schlimm ist. 
+
+Beispiel von Relational zu einem Cassandra Model: 
+![Relational](pics/cass_rel.JPG "hm")
+
+![Cassandra](pics/cass.JPG "hm")
+
+Beim Modelieren einer Datenbank muss klar sein, wie die Queries aussehen. 
+
+/newLine
+
+```SQL
+CREATE KEYSPACE music;
+use music;
+
+Create Table MusicPlaylist (
+  SongId int,
+  SongName text,
+  Year int,
+  Singer text,
+ Primary key((SongId, Year), SongName)
+
+)
+```
+SongID und Year bilden den Partition Key, Clustering nach SongName.
+Für jedes Jahr (Year) wird eine neue Partition erstellt.
+
+
 
 # Sie können mit CQL Datendefinitionen realisieren und Anfragen formulieren.
 
