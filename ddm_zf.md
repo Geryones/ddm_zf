@@ -636,9 +636,18 @@ public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable>
 
 # Sie kennen die Modellierungsprinzipen für Cassandra und können diese anwenden.
 
+1. Know your Data 
+   - Wie sind die Zusammenhänge zwischen den Daten?
+1. Know your Queries
+   - Nach was wird gesucht? Es dürfen nur Primary Keys für Queries verwendet werden!
+1. Data nesting
+   - Daten sind nicht mehr Tables, sondern in Nested Maps angeordnet. Erste Map mit Row Keys, wobei jeder Row key wieder eine Map ist.
+1. Data Duplication
+   - Es kommt fast unweigerlich zu Duplikaten. Die Daten werden nicht normalisiert gespeichert
+
 Nicht mehr Relationales Datenmodell, verwendet nicht Tables im klassischen Sinn. 
 
-|Relational Model | Cassandra Model |
+|Relational Model | Cassandra|
 |:--------|:------------|
 |Database |Keyspace|
 |Table |Column Family (CF)|
@@ -666,25 +675,237 @@ Beim Modelieren einer Datenbank muss klar sein, wie die Queries aussehen.
 CREATE KEYSPACE music;
 use music;
 
-Create Table MusicPlaylist (
-  SongId int,
-  SongName text,
-  Year int,
-  Singer text,
- Primary key((SongId, Year), SongName)
+Create Table MusicPlaylist 
+  (
+      SongId int,
+      SongName text,
+      Year int,
+      Singer text,
+      Primary key((SongId, Year), SongName)
+  );
 
-)
+-- Simple Column Family
+Create table Course_Student
+    (
+        Course_name text primary key,
+        Student_name text,
+        student_rollno int
+    );
+
 ```
 SongID und Year bilden den Partition Key, Clustering nach SongName.
 Für jedes Jahr (Year) wird eine neue Partition erstellt.
 
+## Komplexeres Beispiel: RDBMS to Cassandra
 
+![RDBMS](pics/rdbms.PNG "hm")
+
+![RDBMS](pics/cass_rdbms.PNG "hm")
+
+<<CF>> ist eine Column-Family
+<<SCF>> ist eine Super-Coumn-Family
 
 # Sie können mit CQL Datendefinitionen realisieren und Anfragen formulieren.
 
+## 5 Regeln für Query Model
+
+1. Only primary key columns may be used in a query predicate.
+2. All partition key columns must be restricted by values (i.e. equality search).
+3. All, some, or none of the clustering key columns can be used in a query predicate.
+4. If a clustering key column is used in a query predicate, then all clustering key columns
+that precede this clustering column in the primary key definition must also be used in
+the predicate.
+5. If a clustering key column is restricted by range (i.e. inequality search) in a query
+predicate, then all clustering key columns that precede this clustering column in the
+primary key definition must be restricted by values and no other clustering column
+can be used in the predicate. \newLine
+
+```SQL
+use music; -- music ist der Namespace
+Select * from MusicPlaylist where year = 2000 and SongId = 1000; 
+
+```
+
 # Sie können Datenmodelle für MongoDB entwerfen und kennen die verschiedenen Dartellungsmöglichkeiten von Beziehungen.
 
+|Relational Model | MongoDB |
+|:--------|:------------|
+|Database |Database|
+|Table |Collection|
+|Tuple / Row | Document|
+|Primary Key |Primary Key (Default: Key_id, wird von mongoDB selbst generiert)|
+|Column | Field |
+|Table Join | Embedded Documents|
+
+- Beim Entwerfen der Datenbank soll man sich an den Queries onrientieren. 
+- Wenn verschiedene Objekte zusammen abgefragt werden, sollen diese auch in ein Dokument geschrieben werden. 
+- Joins beim Schreiben, nicht beim Read machen
+- Duplizieren von Daten ist in Ordnung, Diskspace ist billiger als Compute Time. 
+
+## Darstellungsmöglichkeiten
+
+### Embedded
+
+Im Dokument wird ein weiters Dokument definiert \newLine
+```
+{
+   "_id":ObjectId("52ffc33cd85242f436000001"),
+   "contact": "987654321",
+   "dob": "01-01-1991",
+   "name": "Tom Benzamin",
+   "address": [
+      {
+         "building": "22 A, Indiana Apt",
+         "pincode": 123456,
+         "city": "Los Angeles",
+         "state": "California"
+      },
+      {
+         "building": "170 A, Acropolis Apt",
+         "pincode": 456789,
+         "city": "Chicago",
+         "state": "Illinois"
+      }
+   ]
+}
+```
+Das Query sieht folgendermassen aus: \newLine
+```
+>db.users.findOne({"name":"Tom Benzamin"},{"address":1})
+``` 
+### Referenced
+
+Klassisch, die Beziehung wird über eine Referenz realisiert. Das Query wird komplexer und man kommt erst mit mehreren Schritten ans Ziel. \newLine
+
+```
+{
+    "_id":ObjectId("52ffc4a5d85242602e000001"),
+    "building": "170 A, Acropolis Apt",
+    "pincode": 456789,
+    "city": "Chicago",
+    "state": "Illinois"
+}
+
+{
+   "_id":ObjectId("52ffc4a5d85242602e000000"),
+   "building": "22 A, Indiana Apt",
+   "pincode": 123456,
+   "city": "Los Angeles",
+   "state": "California"
+} 
+
+{
+   "_id":ObjectId("52ffc33cd85242f436000001"),
+   "contact": "987654321",
+   "dob": "01-01-1991",
+   "name": "Tom Benzamin",
+   "address_ids": [
+      ObjectId("52ffc4a5d85242602e000000"),
+      ObjectId("52ffc4a5d85242602e000001")
+   ]
+}
+```
+
+Hier sind die Referenzen in einem Array (address_ids) gespeichert. Mit diesen ID's können die Adressen gefunden werden. Das Query sieht dann so aus: \newLine
+
+```
+>var result = db.users.findOne({"name":"Tom Benzamin"},{"address_ids":1})
+>var addresses = db.address.find({"_id":{"$in":result["address_ids"]}})
+```
+In einem ersten Schritt muss das Array mit den Adress-Referenzen gesucht werden. Dieses kann in einem zweiten Schritt ausgelesen werden.
+
+
+## Einfaches Beispiel anhand eines Blogs
+
+**Anforderungen**
+
+- Every post has the unique title, description and url.
+- Every post can have one or more tags.
+- Every post has the name of its publisher and total number of likes.
+- Every post has comments given by users along with their name, message, data-time and likes.
+- On each post, there can be zero or more comments.
+
+
+![RDBMS](pics/rdbms_mongo.PNG "hm")
+
+Um alle Daten in RDBMS zu erhalten braucht es also einen Join über 3 Tabellen. In MongoDB würde man das folgendermassen definieren: \newLine
+
+```
+{
+   _id: POST_ID
+   title: TITLE_OF_POST, 
+   description: POST_DESCRIPTION,
+   by: POST_BY,
+   url: URL_OF_POST,
+   tags: [TAG1, TAG2, TAG3],
+   likes: TOTAL_LIKES, 
+   comments: [	
+      {
+         user:'COMMENT_BY',
+         message: TEXT,
+         dateCreated: DATE_TIME,
+         like: LIKES 
+      },
+      {
+         user:'COMMENT_BY',
+         message: TEXT,
+         dateCreated: DATE_TIME,
+         like: LIKES
+      }
+   ]
+}
+```
+Es gibt also einen Eintrag pro Post
+
+
 # Sie können mit der Mongo Shell Datendefinitionen realisieren und Anfragen formulieren.
+
+## DB erstellen
+
+```
+>use test 
+>db.createCollection("mycollection") -- nicht unbedingt nötig, Collection wird automatisch erstllet, wenn ein Dokument eingefügt wird
+>db.mycollection.insert({
+   _id: ObjectId(7df78ad8902c),
+   title: 'MongoDB Overview', 
+   description: 'MongoDB is no sql database',
+   by: 'tutorials point',
+   url: 'http://www.tutorialspoint.com',
+   tags: ['mongodb', 'database', 'NoSQL'],
+   likes: 100
+})
+```
+Natürlich können auch mehrere Dokumente mit einem Statement erzeugt werden. Dafür müssen die Dokumente in ein Array gepackt werden \newLine
+```
+ >db.post.insert([
+   {
+      title: 'MongoDB Overview', 
+      description: 'MongoDB is no sql database',
+      by: 'tutorials point',
+      url: 'http://www.tutorialspoint.com',
+      tags: ['mongodb', 'database', 'NoSQL'],
+      likes: 100
+   },
+	
+   {
+      title: 'NoSQL Database', 
+      description: "NoSQL database doesn't have tables",
+      by: 'tutorials point',
+      url: 'http://www.tutorialspoint.com',
+      tags: ['mongodb', 'database', 'NoSQL'],
+      likes: 20, 
+      comments: [	
+         {
+            user:'user1',
+            message: 'My first comment',
+            dateCreated: new Date(2013,11,10,2,35),
+            like: 0 
+         }
+      ]
+   }
+])
+```
+Hier werden die _id Felder automatisch von MongoDB generiert. 
 
 # Sie kennen das Graphdatenmodell von Neo4j.
 
