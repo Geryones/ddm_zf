@@ -722,7 +722,7 @@ can be used in the predicate. \newLine
 
 ```SQL
 use music; -- music ist der Namespace
-Select * from MusicPlaylist where year = 2000 and SongId = 1000; 
+Select * from MusicPlaylist |where year = 2000 and SongId = 1000; 
 
 ```
 
@@ -906,6 +906,60 @@ Natürlich können auch mehrere Dokumente mit einem Statement erzeugt werden. Da
 ])
 ```
 Hier werden die _id Felder automatisch von MongoDB generiert. 
+
+## Querying 
+
+Gesucht wird hauptsächlich mit 2 Methoden:
+1. find()
+1. findOne()
+
+Mit der Funktion pretty() erhält man eine schöne Darstellung, ist aber nicht zwingend. 
+
+|Operation|	Syntax|	Example | RDBMS Equivalent|
+|:--------|:------------|:-------------|:----------|
+|Equality	          |{<key>:<value>}        |db.mycol.find({"by":"tutorials point"}).pretty()	|where by = 'tutorials point'|
+|Less Than          |{<key>:{$lt:<value>}}	|db.mycol.find({"likes":{$lt:50}}).pretty()	      |where likes < 50|
+|Less Than Equals   |{<key>:{$lte:<value>}} |db.mycol.find({"likes":{$lte:50}}).pretty()	    |where likes <= 50|
+|Greater Than	      |{<key>:{$gt:<value>}}  |db.mycol.find({"likes":{$gt:50}}).pretty()	      |where likes > 50|
+|Greater Than Equals|{<key>:{$gte:<value>}} |db.mycol.find({"likes":{$gte:50}}).pretty()	    |where likes >= 50|
+|Not Equals         |{<key>:{$ne:<value>}}  |db.mycol.find({"likes":{$ne:50}}).pretty()	      |where likes != 50|
+
+### AND
+
+Wenn mit find() mehrere Parameter Komma-Separiert eingegeben werden, wird es als ein "and" gewertet. \newLine
+```
+>db.mycollection.find(
+   {
+      $and: [
+         {key1: value1}, {key2:value2}
+      ]
+   }
+).pretty()
+
+>db.mycol.find({$and:[{"by":"tutorials point"},{"title": "MongoDB Overview"}]}).pretty()
+```
+
+### OR
+
+Hier muss das Keyword **$or** verwendet werden.\newLine
+```
+>db.mycol.find(
+   {
+      $or: [
+         {key1: value1}, {key2:value2}
+      ]
+   }
+).pretty()
+
+>db.mycol.find({$or:[{"by":"tutorials point"},{"title": "MongoDB Overview"}]}).pretty()
+```
+### Kombination AND und OR
+
+```
+>db.mycol.find({"likes": {$gt:10}, $or: [{"by": "tutorials point"},
+   {"title": "MongoDB Overview"}]}).pretty()
+```
+Das entspricht folgendem Query in SQL: 'where likes>10 AND (by = 'tutorials point' OR title = 'MongoDB Overview')'
 
 # Sie kennen das Graphdatenmodell von Neo4j.
 
