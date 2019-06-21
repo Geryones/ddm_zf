@@ -1030,4 +1030,4 @@ xml
 |rdfs:subPropertyOf |The subject is a subproperty of a property.|
 |rdfs:Ressource |The class resource, everything.|
 
-Als Beispiel kann man Google nehmen. Wir können eine Beziehung zwischen Daten beschreiben und Google versteht es. Zum Beispiel Auther_of %BuchTitle% liefert den gesuchten Author. 
+Als Beispiel kann man Google nehmen. Wir können eine Beziehung zwischen Daten beschreiben und Google versteht es. Zum Beispiel Author_of %BuchTitle% liefert den gesuchten Author. 
