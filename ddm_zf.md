@@ -963,7 +963,31 @@ Das entspricht folgendem Query in SQL: 'where likes>10 AND (by = 'tutorials poin
 
 # Sie kennen das Graphdatenmodell von Neo4j.
 
+![NEO4J](pics/neo4j.PNG "hm")
+
+GraphDatenbank bei der die Beziehung zwischen Daten im Vordergrund steht. 
+
 # Sie können mit der Sprache Cypher Datendefinitionen realisieren und Anfragen formulieren.
+
+```
+CREATE (s:Student {name: "David Eichin"}) RETURN s;
+CREATE (m:Modul {name: "ddm"}) RETURN m;
+MATCH (s:Student {name: "David Eichin"}),(m:Modul {name: "ddm"})
+CREATE (s)-[:besucht {semester: "FS15"}]->(m);
+
+
+MATCH (n) RETURN n;
+MATCH (n) RETURN LABELS(n);
+MATCH ()-[r]->() RETURN ID(r), TYPE(r);
+MATCH (m)<-[:besucht]-(s)
+WHERE s.name = "David Eichin"
+RETURN m.name;
+
+MATCH (m)<-[:besucht]-(s {name: "David Eichin"})
+RETURN m.name;
+MATCH (s:Student {name: "David Eichin"})-[r]->(m:Modul {name: "ddm"})
+RETURN r.semester;
+```
 
 # Sie können das Datenmodell des Resource Description Frameworks anhand eines Beispiels erläutern.
 
@@ -1006,3 +1030,4 @@ xml
 |rdfs:subPropertyOf |The subject is a subproperty of a property.|
 |rdfs:Ressource |The class resource, everything.|
 
+Als Beispiel kann man Google nehmen. Wir können eine Beziehung zwischen Daten beschreiben und Google versteht es. Zum Beispiel Auther_of %BuchTitle% liefert den gesuchten Author. 
