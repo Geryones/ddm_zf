@@ -607,8 +607,8 @@ public static class MyMapper extends Mapper<LongWritable, Text, LongWritable, Te
   private Text word = new Text();
 
   @Override
-  public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-         String line = value.toString();
+  public void map(LongWritable \key, Text \value, Context context) throws IOException, InterruptedException {
+         String line = \value.toString();
          StringTokenizer tokenizer = new StringTokenizer(line);
          while (tokenizer.hasMoreTokens()) {
              word.set(tokenizer.nextToken());
@@ -621,13 +621,13 @@ public static class MyMapper extends Mapper<LongWritable, Text, LongWritable, Te
 public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 
   @Override
-   public void reduce(Text key, Iterable<IntWritable> values, Context context) 
+   public void reduce(Text \key, Iterable<IntWritable> values, Context context) 
      throws IOException, InterruptedException {
        int sum = 0;
        for (IntWritable val : values) {
            sum += val.get();
        }
-       context.write(key, new IntWritable(sum));
+       context.write(\key, new IntWritable(sum));
    }
 }
 ```
@@ -641,7 +641,7 @@ public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable>
 1. Know your Queries
    - Nach was wird gesucht? Es dürfen nur Primary Keys für Queries verwendet werden!
 1. Data nesting
-   - Daten sind nicht mehr Tables, sondern in Nested Maps angeordnet. Erste Map mit Row Keys, wobei jeder Row key wieder eine Map ist.
+   - Daten sind nicht mehr Tables, sondern in Nested Maps angeordnet. Erste Map mit Row Keys, wobei jeder Row \key wieder eine Map ist.
 1. Data Duplication
    - Es kommt fast unweigerlich zu Duplikaten. Die Daten werden nicht normalisiert gespeichert
 
@@ -652,10 +652,10 @@ Nicht mehr Relationales Datenmodell, verwendet nicht Tables im klassischen Sinn.
 |Database |Keyspace|
 |Table |Column Family (CF)|
 |Primary Key |Row Key|
-|Column name |Column name/key|
-|Column value |Column value|
+|Column name |Column name/\key|
+|Column \value |Column \value|
 
-> > But don’t use this analogy while designing Cassandra column families. Instead, think of the Cassandra column family as a map of a map: an outer map keyed by a row key, and an inner map keyed by a column key. Both maps are sorted.
+> > But don’t use this analogy while designing Cassandra column families. Instead, think of the Cassandra column family as a map of a map: an outer map keyed by a row \key, and an inner map keyed by a column \key. Both maps are sorted.
 
 ![Cassandra Model](pics/cassandra.JPG "hm")
 
@@ -681,13 +681,13 @@ Create Table MusicPlaylist
       SongName text,
       Year int,
       Singer text,
-      Primary key((SongId, Year), SongName)
+      Primary \key((SongId, Year), SongName)
   );
 
 -- Simple Column Family
 Create table Course_Student
     (
-        Course_name text primary key,
+        Course_name text primary \key,
         Student_name text,
         student_rollno int
     );
@@ -709,15 +709,15 @@ Für jedes Jahr (Year) wird eine neue Partition erstellt.
 
 ## 5 Regeln für Query Model
 
-1. Only primary key columns may be used in a query predicate.
-2. All partition key columns must be restricted by values (i.e. equality search).
-3. All, some, or none of the clustering key columns can be used in a query predicate.
-4. If a clustering key column is used in a query predicate, then all clustering key columns
-that precede this clustering column in the primary key definition must also be used in
+1. Only primary \key columns may be used in a query predicate.
+2. All partition \key columns must be restricted by values (i.e. equality search).
+3. All, some, or none of the clustering \key columns can be used in a query predicate.
+4. If a clustering \key column is used in a query predicate, then all clustering \key columns
+that precede this clustering column in the primary \key definition must also be used in
 the predicate.
-5. If a clustering key column is restricted by range (i.e. inequality search) in a query
-predicate, then all clustering key columns that precede this clustering column in the
-primary key definition must be restricted by values and no other clustering column
+5. If a clustering \key column is restricted by range (i.e. inequality search) in a query
+predicate, then all clustering \key columns that precede this clustering column in the
+primary \key definition must be restricted by values and no other clustering column
 can be used in the predicate. \newLine
 
 ```SQL
@@ -917,12 +917,12 @@ Mit der Funktion pretty() erhält man eine schöne Darstellung, ist aber nicht z
 
 |Operation|	Syntax|	Example | RDBMS Equivalent|
 |:--------|:------------|:-------------|:----------|
-|Equality	          |{<key>:<value>}        |db.mycol.find({"by":"tutorials point"}).pretty()	|where by = 'tutorials point'|
-|Less Than          |{<key>:{$lt:<value>}}	|db.mycol.find({"likes":{$lt:50}}).pretty()	      |where likes < 50|
-|Less Than Equals   |{<key>:{$lte:<value>}} |db.mycol.find({"likes":{$lte:50}}).pretty()	    |where likes <= 50|
-|Greater Than	      |{<key>:{$gt:<value>}}  |db.mycol.find({"likes":{$gt:50}}).pretty()	      |where likes > 50|
-|Greater Than Equals|{<key>:{$gte:<value>}} |db.mycol.find({"likes":{$gte:50}}).pretty()	    |where likes >= 50|
-|Not Equals         |{<key>:{$ne:<value>}}  |db.mycol.find({"likes":{$ne:50}}).pretty()	      |where likes != 50|
+|Equality	          |{<\key>:<\value>}        |db.mycol.find({"by":"tutorials point"}).pretty()	|where by = 'tutorials point'|
+|Less Than          |{<\key>:{$lt:<\value>}}	|db.mycol.find({"likes":{$lt:50}}).pretty()	      |where likes < 50|
+|Less Than Equals   |{<\key>:{$lte:<\value>}} |db.mycol.find({"likes":{$lte:50}}).pretty()	    |where likes <= 50|
+|Greater Than	      |{<\key>:{$gt:<\value>}}  |db.mycol.find({"likes":{$gt:50}}).pretty()	      |where likes > 50|
+|Greater Than Equals|{<\key>:{$gte:<\value>}} |db.mycol.find({"likes":{$gte:50}}).pretty()	    |where likes >= 50|
+|Not Equals         |{<\key>:{$ne:<\value>}}  |db.mycol.find({"likes":{$ne:50}}).pretty()	      |where likes != 50|
 
 ### AND
 
