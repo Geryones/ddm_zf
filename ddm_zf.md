@@ -26,17 +26,17 @@ Transaktionsverwaltung
 # Sie kennen die 12 Regeln für verteilte Datenbanksysteme von Chris Date
 
 1. Lokale Autonomie
-2. Unabhängigkeit von zentralen Systemfunktionen
-3. Hohe Verfügbarkeit
-4. Ortstransparenz
-5. Fragmentierungstransparenz
-6. Replikationstransparenz
-7. Verteilte Anfragebearbeitung
-8. Verteilte Transaktionsverarbeitung
-9. Hardware Unabhängigkeit
-10. Betriebssystem Unabhängigkeit
-11. Netzwerkunabhängigkeit
-12. Datenbanksystem Unabhängigkeit
+1. Unabhängigkeit von zentralen Systemfunktionen
+1. Hohe Verfügbarkeit
+1. Ortstransparenz
+1. Fragmentierungstransparenz
+1. Replikationstransparenz
+1. Verteilte Anfragebearbeitung
+1. Verteilte Transaktionsverarbeitung
+1. Hardware Unabhängigkeit
+1. Betriebssystem Unabhängigkeit
+1. Netzwerkunabhängigkeit
+1. Datenbanksystem Unabhängigkeit
 
 # Sie können den Begriff Transparenz in verteilten Datenbanken erklären.
 
@@ -46,8 +46,7 @@ Transaktionsverwaltung
 # Sie können mit mindestens 2 verschiedenen Methoden Ortstransparenz mit einer verteilten Oracle Datenbank realisieren.
 
 - **Replikationstransparenz** Aus Performancegründen kann es mehrere Kopien derselben Ressource geben. Das System sorgt für die transparente Replikation der darin vorgenommenen Änderungen.
-- **Fragmentierungstransparenz** Die Teilbestandteile einer Ressource können an verschiedenen Orten gespeichert sein.
-\newline 
+- **Fragmentierungstransparenz** Die Teilbestandteile einer Ressource können an verschiedenen Orten gespeichert sein.\newline 
 
 ``` SQL
 -- Ortstransparenz
@@ -115,6 +114,7 @@ Bilden von minterms
 **Anwendung 1**
 Erfragt Namen und Bestand von Bikes nach Typ: City (4/Woche),
 Trekking (3/Woche), Mountain (2/Woche), Road (1/Woche) \newline
+
 ``` 
 SELECT bname, bestand
 FROM bike s
@@ -129,10 +129,8 @@ simple predicates:
 **Anwendung 2**
 Verwaltet Bikes mit Preis kleiner 2000 (3/Woche), die restlichen
 Bikes (1/Woche):\newline
-```
-SELECT ∗
-FROM bike s
-WHERE p r e i s ?
+```SQL
+SELECT * FROM bike s WHERE preis?
 ```
 simple predicates:
 - p5: Preis < 2000
@@ -140,14 +138,14 @@ simple predicates:
 
 Aus diesen 6 simple predicates könnten 2^6 = 64 minterm predicates gebildet werden.
 Nur die sinnvollen verwenden, diese definieren dann die Fragmente:
-- BIKES1: σTyp = 'Road' AND Preis 6 2000 (BIKES)
-- BIKES2: σTyp = 'Road' AND Preis > 2000 (BIKES)
-- BIKES3: σTyp = 'Mountain' AND Preis 6 2000 (BIKES)
-- BIKES4: σTyp = 'Mountain' AND Preis > 2000 (BIKES)
-- BIKES5: σTyp = 'Trekking' AND Preis 6 2000 (BIKES)
-- BIKES6: σTyp = 'Trekking' AND Preis > 2000 (BIKES)
-- BIKES7: σTyp = 'City' AND Preis 6 2000 (BIKES)
-- BIKES8: σTyp = 'City' AND Preis > 2000 (BIKES)
+- BIKES1: Typ = 'Road' AND Preis 6 2000 (BIKES)
+- BIKES2: Typ = 'Road' AND Preis > 2000 (BIKES)
+- BIKES3: Typ = 'Mountain' AND Preis 6 2000 (BIKES)
+- BIKES4: Typ = 'Mountain' AND Preis > 2000 (BIKES)
+- BIKES5: Typ = 'Trekking' AND Preis 6 2000 (BIKES)
+- BIKES6: Typ = 'Trekking' AND Preis > 2000 (BIKES)
+- BIKES7: Typ = 'City' AND Preis 6 2000 (BIKES)
+- BIKES8: Typ = 'City' AND Preis > 2000 (BIKES)
 
 ## Abgeleitete horizontale Fragementierung (DHF)
 
@@ -591,7 +589,9 @@ Eine verteilte Datenbank kann von den 3 Eigenschaften Consistency, Availability 
 
 # Sie kennen das Map/Reduce Verfahren und können dafür typische Anwendungen programmieren.
 
-Hier geht es um das Hadoop-Framework \newLine
+Hier geht es um das Hadoop-Framework.
+\newline
+
 ```
 map: (K1, V1) --> list(K2, V2)
 reduce: (K2, list(V2)) --> list(K3, V3)
@@ -600,7 +600,7 @@ Der Output der Map-Funktion ist der Input für Reduce. Diese Typen müssen also 
 
 ![Schema Hadoop](pics/hadoop.JPG "hm")
 ![Word Count with Hadoop](pics/hadoop_2.JPG "hm")
-\newLine
+
 
 ``` Java
 public static class MyMapper extends Mapper<LongWritable, Text, LongWritable, Text>{
@@ -667,9 +667,7 @@ Beispiel von Relational zu einem Cassandra Model:
 
 ![Cassandra](pics/cass.JPG "hm")
 
-Beim Modelieren einer Datenbank muss klar sein, wie die Queries aussehen. 
-
-/newLine
+Beim Modelieren einer Datenbank muss klar sein, wie die Queries aussehen. \newline
 
 ```SQL
 CREATE KEYSPACE music;
@@ -718,11 +716,11 @@ the predicate.
 5. If a clustering\ key column is restricted by range (i.e. inequality search) in a query
 predicate, then all clustering\ key columns that precede this clustering column in the
 primary\ key definition must be restricted by values and no other clustering column
-can be used in the predicate. \newLine
+can be used in the predicate. \newline
 
 ```SQL
 use music; -- music ist der Namespace
-Select * from MusicPlaylist |where year = 2000 and SongId = 1000; 
+Select * from MusicPlaylist where year = 2000 and SongId = 1000; 
 
 ```
 
@@ -746,7 +744,7 @@ Select * from MusicPlaylist |where year = 2000 and SongId = 1000;
 
 ### Embedded
 
-Im Dokument wird ein weiters Dokument definiert \newLine
+Im Dokument wird ein weiters Dokument definiert \newline
 ```
 {
    "_id":ObjectId("52ffc33cd85242f436000001"),
@@ -769,13 +767,13 @@ Im Dokument wird ein weiters Dokument definiert \newLine
    ]
 }
 ```
-Das Query sieht folgendermassen aus: \newLine
+Das Query sieht folgendermassen aus: \newline
 ```
 >db.users.findOne({"name":"Tom Benzamin"},{"address":1})
 ``` 
 ### Referenced
 
-Klassisch, die Beziehung wird über eine Referenz realisiert. Das Query wird komplexer und man kommt erst mit mehreren Schritten ans Ziel. \newLine
+Klassisch, die Beziehung wird über eine Referenz realisiert. Das Query wird komplexer und man kommt erst mit mehreren Schritten ans Ziel. \newline
 
 ```
 {
@@ -806,7 +804,7 @@ Klassisch, die Beziehung wird über eine Referenz realisiert. Das Query wird kom
 }
 ```
 
-Hier sind die Referenzen in einem Array (address_ids) gespeichert. Mit diesen ID's können die Adressen gefunden werden. Das Query sieht dann so aus: \newLine
+Hier sind die Referenzen in einem Array (address_ids) gespeichert. Mit diesen ID's können die Adressen gefunden werden. Das Query sieht dann so aus: \newline
 
 ```
 >var result = db.users.findOne({"name":"Tom Benzamin"},{"address_ids":1})
@@ -828,7 +826,7 @@ In einem ersten Schritt muss das Array mit den Adress-Referenzen gesucht werden.
 
 ![RDBMS](pics/rdbms_mongo.PNG "hm")
 
-Um alle Daten in RDBMS zu erhalten braucht es also einen Join über 3 Tabellen. In MongoDB würde man das folgendermassen definieren: \newLine
+Um alle Daten in RDBMS zu erhalten braucht es also einen Join über 3 Tabellen. In MongoDB würde man das folgendermassen definieren: \newline
 
 ```
 {
@@ -875,7 +873,8 @@ Es gibt also einen Eintrag pro Post
    likes: 100
 })
 ```
-Natürlich können auch mehrere Dokumente mit einem Statement erzeugt werden. Dafür müssen die Dokumente in ein Array gepackt werden \newLine
+Natürlich können auch mehrere Dokumente mit einem Statement erzeugt werden. Dafür müssen die Dokumente in ein Array gepackt werden 
+\newline
 ```
  >db.post.insert([
    {
@@ -910,6 +909,7 @@ Hier werden die _id Felder automatisch von MongoDB generiert.
 ## Querying 
 
 Gesucht wird hauptsächlich mit 2 Methoden:
+
 1. find()
 1. findOne()
 
@@ -917,16 +917,17 @@ Mit der Funktion pretty() erhält man eine schöne Darstellung, ist aber nicht z
 
 |Operation|	Syntax|	Example | RDBMS Equivalent|
 |:--------|:------------|:-------------|:----------|
-|Equality	          |{\<key>:\<value>}        |db.mycol.find({"by":"tutorials point"}).pretty()	|where by = 'tutorials point'|
-|Less Than          |{\<key>:{$lt:\<value>}}	|db.mycol.find({"likes":{$lt:50}}).pretty()	      |where likes < 50|
-|Less Than Equals   |{\<key>:{$lte:\<value>}} |db.mycol.find({"likes":{$lte:50}}).pretty()	    |where likes <= 50|
-|Greater Than	      |{\<key>:{$gt:\<value>}}  |db.mycol.find({"likes":{$gt:50}}).pretty()	      |where likes > 50|
-|Greater Than Equals|{\<key>:{$gte:\<value>}} |db.mycol.find({"likes":{$gte:50}}).pretty()	    |where likes >= 50|
-|Not Equals         |{\<key>:{$ne:\<value>}}  |db.mycol.find({"likes":{$ne:50}}).pretty()	      |where likes != 50|
+|Equality	          |\{\<key>:\<value>\}           |db.mycol.find(\{"by":"tutorials point"\})	|where by = 'tutorials point'|
+|Less Than            |\{\<key>:\{\$lt:\<value>\}\}  |db.mycol.find(\{"likes" : \{\$lt:50\}\})	   |where likes < 50            |
+|Less Than Equals     |\{\<key>:\{\$lte:\<value>\}\} |db.mycol.find(\{"likes" : \{\$lte:50\}\})	|where likes <= 50           |
+|Greater Than	       |\{\<key>:\{\$gt:\<value>\}\}  |db.mycol.find(\{"likes" : \{\$gt:50\}\})	   |where likes > 50            |
+|Greater Than Equals  |\{\<key>:\{\$gte:\<value>\}\} |db.mycol.find(\{"likes" : \{\$gte:50\}\})   |where likes >= 50           |
+|Not Equals           |\{\<key>:\{\$ne:\<value>\}\}  |db.mycol.find(\{"likes" : \{\$ne:50\}\})    |where likes != 50           |
+
 
 ### AND
 
-Wenn mit find() mehrere Parameter Komma-Separiert eingegeben werden, wird es als ein "and" gewertet. \newLine
+Wenn mit find() mehrere Parameter Komma-Separiert eingegeben werden, wird es als ein "and" gewertet. \newline
 ```
 >db.mycollection.find(
    {
@@ -941,7 +942,7 @@ Wenn mit find() mehrere Parameter Komma-Separiert eingegeben werden, wird es als
 
 ### OR
 
-Hier muss das Keyword **$or** verwendet werden.\newLine
+Hier muss das Keyword **$or** verwendet werden.\newline
 ```
 >db.mycol.find(
    {
