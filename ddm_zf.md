@@ -724,6 +724,12 @@ Select * from MusicPlaylist where year = 2000 and SongId = 1000;
 
 ```
 
+## Chebotko Diagramme
+
+![Chebotko Notation](pics/chebotko_notation.PNG "hm")
+
+![Chebotko Diagram](pics/chebotko_diagram.PNG "hm")
+
 # Sie können Datenmodelle für MongoDB entwerfen und kennen die verschiedenen Dartellungsmöglichkeiten von Beziehungen.
 
 |Relational Model | MongoDB |
