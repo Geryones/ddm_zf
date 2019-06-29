@@ -297,6 +297,14 @@ Für Serialisierbarkeit des globalen Ablaufplans sind zwei Bedingungen nötig:
 
 # Sie können 3 verschiedene Varianten der Realisierung des 2-Phasen-Sperrprotokolls in verteilten Datenbanksystemen erklären.
 
+- 2-Phasen-Sperrprotokoll
+  - Erste Phase -> Locks für Tabellen, Spalten, ... holen
+  - Zweite Phase -> Locks wieder freigeben
+  - Dazwischen wird die gewünschten Operation durchgeführt
+  - Es gibt Lese- und Schreib Locks
+    - Bei einem Schreiblock ist anderen Transaktionen **nicht** erlaubt Objekte
+	  lesend zu verwenden.
+
 - basierend auf 2 Phasen Sperrprotokoll
   - zentrales (primary site) 2PL
   - Primary Copy 2PL
