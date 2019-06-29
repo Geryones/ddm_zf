@@ -12,7 +12,7 @@ titlepage-rule-height: 1
 ...
 \newpage
 
-# Sie können verteilte Datenbank systeme entlang der Dimension HEterogenität, Autonomie und Verteilung klassifizieren
+# Sie können verteilte Datenbank systeme entlang der Dimension Heterogenität, Autonomie und Verteilung klassifizieren
 
 - **Heterogenität**: Hardware, Netzwerkprotokolle,
 Datenverwaltung, Datenmodell, Abfragesprache,
