@@ -1,1 +1,1 @@
-pandoc ddm_zf.md -o dd_zf.pdf --from markdown --template eisvogel --listings --number-sections -V lang=de --toc
+pandoc ddm_zf.md -o ddm_zf.pdf --from markdown --template eisvogel --listings --number-sections -V lang=de --toc
