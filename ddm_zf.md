@@ -9,34 +9,40 @@ titlepage-color: "06386e"
 titlepage-text-color: "FFFFFF"
 titlepage-rule-color: "FFFFFF"
 titlepage-rule-height: 1
-...
+header-includes: |
+	\usepackage[margin=0.5in]{geometry}
+---
 \newpage
 
-# Sie können verteilte Datenbank systeme entlang der Dimension HEterogenität, Autonomie und Verteilung klassifizieren
+# Sie können verteilte Datenbank systeme entlang der Dimension Heterogenität, Autonomie und Verteilung klassifizieren
 
-- **Heterogenität**: Hardware, Netzwerkprotokolle,
-Datenverwaltung, Datenmodell, Abfragesprache,
-Transaktionsverwaltung
+- **Heterogenität**: Hardware, Netzwerkprotokolle, Datenverwaltung, Datenmodell,
+  Abfragesprache, Transaktionsverwaltung
+  - Eine Datenbank und viele Instanzen der selben Applikation die darauf zugreifen -> Homogen (Wikipedia)
+  - Eine oder mehrere Datenbanken und viele verschiedene Applikation die darauf zugreifen -> Heterogen (Wikipedia)
+    - z.B. Fachapplikationen welche vielfälltige Daten verwalten
   - 2 Ausprägungen: homogen, heterogen
 - **Verteilung**: betrifft die Verteilung der Daten
   - 3 Ausprägungen: zentral, client/server, verteilt
 - **Autonomie**: betrifft die Verteilung der Steuerung
+  - Bezeichnet den Grad, zu dem verschiedene miteinander verbundene DBMS unabhängig voneinander
+    operieren können (Wikipedia).
   - 3 Ausprägungen: stark integriert, halbautonom, isoliert
 
 # Sie kennen die 12 Regeln für verteilte Datenbanksysteme von Chris Date
 
 1. Lokale Autonomie
-1. Unabhängigkeit von zentralen Systemfunktionen
-1. Hohe Verfügbarkeit
-1. Ortstransparenz
-1. Fragmentierungstransparenz
-1. Replikationstransparenz
-1. Verteilte Anfragebearbeitung
-1. Verteilte Transaktionsverarbeitung
-1. Hardware Unabhängigkeit
-1. Betriebssystem Unabhängigkeit
-1. Netzwerkunabhängigkeit
-1. Datenbanksystem Unabhängigkeit
+2. Unabhängigkeit von zentralen Systemfunktionen
+3. Hohe Verfügbarkeit
+4. Ortstransparenz
+5. Fragmentierungstransparenz
+6. Replikationstransparenz
+7. Verteilte Anfragebearbeitung
+8. Verteilte Transaktionsverarbeitung
+9. Hardware Unabhängigkeit
+10. Betriebssystem Unabhängigkeit
+11. Netzwerkunabhängigkeit
+12. Datenbanksystem Unabhängigkeit
 
 # Sie können den Begriff Transparenz in verteilten Datenbanken erklären.
 
@@ -50,8 +56,9 @@ Transaktionsverwaltung
 
 ``` SQL
 -- Ortstransparenz
--- wird benötigt, dass bei select statement nicht immer der ganze link angezeigt werden muss
--- so muss der benutzer nicht wissen wo die daten genau liegen, höchstens dass sie an einem anderen ort liegen
+-- Wird benötigt, dass bei select Statement nicht immer der ganze Link
+-- angezeigt werden muss. So muss der Benutzer nicht wissen wo genau die Daten
+-- liegen.
 CREATE OR REPLACE VIEW filme
 AS SELECT * FROM filme@ganymed.sirius.fhnw.ch;
 DROP VIEW filme;
@@ -80,6 +87,15 @@ USING 'ganymed';
   - Menge von Fragmenten (Ausschnitte der Daten)
   - zugeteilt auf verschiedene Knoten
 
+- Es gibt verschiedene Strategien zum Design eines Schemas ([Uni Frankfurt](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&ved=2ahUKEwiPr5P6vo7jAhXEwsQBHV5OBlMQFjABegQIARAC&url=http%3A%2F%2Fwww.bigdata.uni-frankfurt.de%2Fwp-content%2Fuploads%2F2017%2F03%2F04a_methoden_des_db-designs.pdf&usg=AOvVaw3HA9r_qje9Cw7j3wH9AvDr))
+  - **Top-down**
+    - Anwendungsanforderungen -> 1. Verfeinerungstufe -> 2. Verfeinerungstufe -> Finale Verfeinerungstufe
+	- Mit jeder Iteration kommen mehr Details zum Schema dazu.
+	- Am Anfang sehr Abstrakt gegen Schluss immer konkreter
+  - **Bottom-up**
+    - Man beginnt mit elementaren Konzepten und den Details
+	- Erstellen von elementaren Konzepten -> Sammlung elementarer Konzepte ->
+      Zusammenführen elementarer Konzepte -> Endgültiges Schema
 ![Entwurfsproblem - Lösung](pics/entwurfsproblem.PNG "hm")
 
 # Sie können eine primäre horizontale Fragmentierung (PHF) durchführen
@@ -98,15 +114,24 @@ Sind bool'sche Kombinationen von simple Predicates
 Verknüpfen aller simple predicates aus P mit AND und NOT
 - bname = 'Siena', AND NOT (preis <2000)
 
-Mit den Minterms müssen alle Daten abgedeckt werden. 
-- Minterm selectivity: sel(mi)
-  - Anzahl Tupel die mit dem Minterm mi ausgewählt werden
-- Access Frequency acc(mi)
-  - Häufigketi der Anwendung auf Daten mit dem Minterm mi zugreifen
+Mit den Minterms müssen alle Daten abgedeckt werden.
+- Minterm selectivity: sel(m~i~)
+  - Anzahl Tupel die mit dem Minterm m~i~ ausgewählt werden
+- Access Frequency acc(m~i~)
+  - Häufigkeit der Anwendung auf Daten mit dem Minterm m~i~ zugreifen
 
 ## PHF - 1. Schritt
 
-Finden einer Menge von simple predicates die Vollständig und Minimal sind. 
+Finden einer Menge von simple predicates die Vollständig und Minimal sind:
+
+- **Vollständigkeit** → Eine Menge von simple predicates ist vollständig genau dann,
+  wenn auf jedes Tupel im gleichen Fragment von allen Anwendungen mit der
+  gleichen Häufigkeit zugegriffen wird
+- **Minimalität** → Wird durch ein simple predicate ein Fragment weiter aufgeteilt,
+  dann muss es mindestens eine Anwendung geben, die auf diese Fragmente
+  verschieden zugreift. Ein simple predicate soll also relevant sein für die
+  Bestimmung einer Fragmentierung. Sind alle simple predicate eine Menge P
+  relevant, dann ist P minimal
 
 ## PHF - 2. Schritt 
 
@@ -164,17 +189,16 @@ Für diese Folien siehe Anhang.
 # Sie kennen die Korrektheitsregeln für eine Fragmentierung und können sie auf ein Beispiel anwenden.
 
 - **vollständigkeit**
-  - wenn R zerlegt wird in R1, R2, . . . , Rn, dann muss jedes Datenelement
-aus R in einem Ri enthalten sein.
+  - wenn R zerlegt wird in R~1~, R~2~, . . . , R~n~, dann muss jedes Datenelement
+aus R in einem R~i~ enthalten sein.
 - **rekonstruierbar**
-  - wenn R zerlegt wird in R1, R2, . . . , Rn, dann muss es relationale
+  - wenn R zerlegt wird in R~1~, R~2~, . . . , R~n~, dann muss es relationale
 Operatoren geben, so dass R wiederhergestellt werden kann.
 - **disjunkt**
-  - wenn R horizontal zerlegt wird in R1, R2, . . . , Rn, dann müssen die
-Fragmente paarweise disjunkt sein.
-wenn R vertikal zerlegt wird in R1, R2, . . . , Rn, dann müssen die
-Fragmente bezogen auf die nichtprimen Attribute paarweise
-disjunkt sein.
+  - wenn R horizontal zerlegt wird in R~1~, R~2~, . . . , R~n~, dann müssen die
+    Fragmente paarweise disjunkt sein.
+  - wenn R vertikal zerlegt wird in R~1~, R~2~, . . . , R~n~, dann müssen die Fragmente
+    bezogen auf die nichtprimen Attribute paarweise disjunkt sein.
 
 # Sie können die verschiedenen Phasen einer verteilten Anfrageverarbeitung beschreiben.
 
@@ -262,14 +286,26 @@ Systemen
 
 # Sie verstehen die Erweiterung des Begriffs Serialisierbarkeit in einem verteilten Datenbanksystem
 
-für Serialisierbarkeit des globalen Ablaufplans sind zwei
-Bedingungen nötig
-- jeder lokale Ablaufplan muss serialisierbar sein
-- zwei Konflikt Operationen müssen in der gleichen Reihenfolge
-auftreten in allen lokalen Ablaufplänen, in denen sie zusammen
-auftreten
+In Transaktionssystemen existiert ein Ausführungsplan für die parallele Ausführung mehrerer
+Transaktionen. Der Plan wird auch Historie genannt und gibt an, in welcher Reihenfolge die einzelnen
+Operationen der Transaktion ausgeführt werden. Als serialisierbar wird eine Historie bezeichnet,
+wenn sie zum selben Ergebnis führt wie eine nacheinander (seriell) ausgeführte Historie über
+dieselben Transaktionen.
+
+Für Serialisierbarkeit des globalen Ablaufplans sind zwei Bedingungen nötig:
+- Jeder lokale Ablaufplan muss serialisierbar sein
+- Zwei Konflikt Operationen müssen in der gleichen Reihenfolge auftreten in allen lokalen
+  Ablaufplänen, in denen sie zusammen auftreten
 
 # Sie können 3 verschiedene Varianten der Realisierung des 2-Phasen-Sperrprotokolls in verteilten Datenbanksystemen erklären.
+
+- 2-Phasen-Sperrprotokoll
+  - Erste Phase -> Locks für Tabellen, Spalten, ... holen
+  - Zweite Phase -> Locks wieder freigeben
+  - Dazwischen wird die gewünschten Operation durchgeführt
+  - Es gibt Lese- und Schreib Locks
+    - Bei einem Schreiblock ist anderen Transaktionen **nicht** erlaubt Objekte
+	  lesend zu verwenden.
 
 - basierend auf 2 Phasen Sperrprotokoll
   - zentrales (primary site) 2PL
