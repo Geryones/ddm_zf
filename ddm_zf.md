@@ -9,8 +9,6 @@ titlepage-color: "06386e"
 titlepage-text-color: "FFFFFF"
 titlepage-rule-color: "FFFFFF"
 titlepage-rule-height: 1
-header-includes: |
-	\usepackage[margin=0.5in]{geometry}
 ---
 \newpage
 
