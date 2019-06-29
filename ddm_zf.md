@@ -112,11 +112,11 @@ Sind bool'sche Kombinationen von simple Predicates
 Verknüpfen aller simple predicates aus P mit AND und NOT
 - bname = 'Siena', AND NOT (preis <2000)
 
-Mit den Minterms müssen alle Daten abgedeckt werden. 
-- Minterm selectivity: sel(mi)
-  - Anzahl Tupel die mit dem Minterm mi ausgewählt werden
-- Access Frequency acc(mi)
-  - Häufigketi der Anwendung auf Daten mit dem Minterm mi zugreifen
+Mit den Minterms müssen alle Daten abgedeckt werden.
+- Minterm selectivity: sel(m~i~)
+  - Anzahl Tupel die mit dem Minterm m~i~ ausgewählt werden
+- Access Frequency acc(m~i~)
+  - Häufigkeit der Anwendung auf Daten mit dem Minterm m~i~ zugreifen
 
 ## PHF - 1. Schritt
 
