@@ -54,8 +54,9 @@ titlepage-rule-height: 1
 
 ``` SQL
 -- Ortstransparenz
--- wird benötigt, dass bei select statement nicht immer der ganze link angezeigt werden muss
--- so muss der benutzer nicht wissen wo die daten genau liegen, höchstens dass sie an einem anderen ort liegen
+-- Wird benötigt, dass bei select Statement nicht immer der ganze Link
+-- angezeigt werden muss. So muss der Benutzer nicht wissen wo genau die Daten
+-- liegen.
 CREATE OR REPLACE VIEW filme
 AS SELECT * FROM filme@ganymed.sirius.fhnw.ch;
 DROP VIEW filme;
