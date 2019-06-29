@@ -120,7 +120,16 @@ Mit den Minterms müssen alle Daten abgedeckt werden.
 
 ## PHF - 1. Schritt
 
-Finden einer Menge von simple predicates die Vollständig und Minimal sind. 
+Finden einer Menge von simple predicates die Vollständig und Minimal sind:
+
+- **Vollständigkeit** → Eine Menge von simple predicates ist vollständig genau dann,
+  wenn auf jedes Tupel im gleichen Fragment von allen Anwendungen mit der
+  gleichen Häufigkeit zugegriffen wird
+- **Minimalität** → Wird durch ein simple predicate ein Fragment weiter aufgeteilt,
+  dann muss es mindestens eine Anwendung geben, die auf diese Fragmente
+  verschieden zugreift. Ein simple predicate soll also relevant sein für die
+  Bestimmung einer Fragmentierung. Sind alle simple predicate eine Menge P
+  relevant, dann ist P minimal
 
 ## PHF - 2. Schritt 
 
