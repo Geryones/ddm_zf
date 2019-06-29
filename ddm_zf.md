@@ -207,8 +207,9 @@ Operatoren geben, so dass R wiederhergestellt werden kann.
 
 ## Zerlegung
 
-SQL Query zerlegen und umformen in relationale Algebra unter
-Verwendung des globalen Schemas
+SQL Query zerlegen und umformen in relationale Algebra unter Verwendung des
+globalen Schemas:
+
 - Normalisierung (Bedingung in WHERE Klausel)
 - Analyse, um inkorrekte Queries zurückzuweisen
   - Analyse nach Typ
@@ -229,7 +230,8 @@ mit Fragmenten
 
 ## Globale Optimierung
 
-fnde den besten globalen Ausführungsplan
+Finde den besten globalen Ausführungsplan:
+
 - Kostenfunktion minimieren
 - verteilte Join Verarbeitung
   - Bushy versus Left Deep (Linear) Tree
@@ -352,8 +354,8 @@ werden
   - Sperre von Tj
   - Zyklen im WFG zeigen Deadlocks
 
-- Ansatz: automatisch Deadlocks erkennen und eine betroffene
-Transaktion abbrechen
+- Ansatz: automatisch Deadlocks erkennen und eine betroffene Transaktion
+  abbrechen
 - bevorzugter Ansatz
   - höhere Resourcen Nutzung
   - einfache Verfahren
@@ -622,7 +624,7 @@ Der Output der Map-Funktion ist der Input für Reduce. Diese Typen müssen also 
 ![Word Count with Hadoop](pics/hadoop_2.JPG "hm")
 
 
-``` Java
+``` java
 public static class MyMapper extends Mapper<LongWritable, Text, LongWritable, Text>{
   private Text word = new Text();
 
@@ -689,7 +691,7 @@ Beispiel von Relational zu einem Cassandra Model:
 
 Beim Modelieren einer Datenbank muss klar sein, wie die Queries aussehen. \newline
 
-```SQL
+```
 CREATE KEYSPACE music;
 use music;
 
