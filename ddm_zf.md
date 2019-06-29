@@ -30,17 +30,17 @@ titlepage-rule-height: 1
 # Sie kennen die 12 Regeln für verteilte Datenbanksysteme von Chris Date
 
 1. Lokale Autonomie
-1. Unabhängigkeit von zentralen Systemfunktionen
-1. Hohe Verfügbarkeit
-1. Ortstransparenz
-1. Fragmentierungstransparenz
-1. Replikationstransparenz
-1. Verteilte Anfragebearbeitung
-1. Verteilte Transaktionsverarbeitung
-1. Hardware Unabhängigkeit
-1. Betriebssystem Unabhängigkeit
-1. Netzwerkunabhängigkeit
-1. Datenbanksystem Unabhängigkeit
+2. Unabhängigkeit von zentralen Systemfunktionen
+3. Hohe Verfügbarkeit
+4. Ortstransparenz
+5. Fragmentierungstransparenz
+6. Replikationstransparenz
+7. Verteilte Anfragebearbeitung
+8. Verteilte Transaktionsverarbeitung
+9. Hardware Unabhängigkeit
+10. Betriebssystem Unabhängigkeit
+11. Netzwerkunabhängigkeit
+12. Datenbanksystem Unabhängigkeit
 
 # Sie können den Begriff Transparenz in verteilten Datenbanken erklären.
 
