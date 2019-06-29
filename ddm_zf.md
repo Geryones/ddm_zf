@@ -684,7 +684,8 @@ Nicht mehr Relationales Datenmodell, verwendet nicht Tables im klassischen Sinn.
 Da keine Joins und Group By möglich sind, können die gewünschten Daten nicht immer mit einem einzigen Query abgefragt werden. 
 Es kann durchaus zu Redundanzen kommen, was aber nicht weiter schlimm ist. 
 
-Beispiel von Relational zu einem Cassandra Model: 
+Beispiel von Relational zu einem Cassandra Model:
+
 ![Relational](pics/cass_rel.JPG "hm")
 
 ![Cassandra](pics/cass.JPG "hm")
