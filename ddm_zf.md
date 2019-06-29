@@ -85,6 +85,15 @@ USING 'ganymed';
   - Menge von Fragmenten (Ausschnitte der Daten)
   - zugeteilt auf verschiedene Knoten
 
+- Es gibt verschiedene Strategien zum Design eines Schemas ([Uni Frankfurt](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&ved=2ahUKEwiPr5P6vo7jAhXEwsQBHV5OBlMQFjABegQIARAC&url=http%3A%2F%2Fwww.bigdata.uni-frankfurt.de%2Fwp-content%2Fuploads%2F2017%2F03%2F04a_methoden_des_db-designs.pdf&usg=AOvVaw3HA9r_qje9Cw7j3wH9AvDr))
+  - **Top-down**
+    - Anwendungsanforderungen -> 1. Verfeinerungstufe -> 2. Verfeinerungstufe -> Finale Verfeinerungstufe
+	- Mit jeder Iteration kommen mehr Details zum Schema dazu.
+	- Am Anfang sehr Abstrakt gegen Schluss immer konkreter
+  - **Bottom-up**
+    - Man beginnt mit elementaren Konzepten und den Details
+	- Erstellen von elementaren Konzepten -> Sammlung elementarer Konzepte ->
+      Zusammenführen elementarer Konzepte -> Endgültiges Schema
 ![Entwurfsproblem - Lösung](pics/entwurfsproblem.PNG "hm")
 
 # Sie können eine primäre horizontale Fragmentierung (PHF) durchführen
