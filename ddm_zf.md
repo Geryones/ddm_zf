@@ -262,6 +262,8 @@ Systemen
 
 # Sie verstehen die Erweiterung des Begriffs Serialisierbarkeit in einem verteilten Datenbanksystem
 
+In Transaktionssystemen existiert ein Ausführungsplan für die parallele Ausführung mehrerer Transaktionen. Der Plan wird auch Historie genannt und gibt an, in welcher Reihenfolge die einzelnen Operationen der Transaktion ausgeführt werden. Als serialisierbar wird eine Historie bezeichnet, wenn sie zum selben Ergebnis führt wie eine nacheinander (seriell) ausgeführte Historie über dieselben Transaktionen. 
+
 für Serialisierbarkeit des globalen Ablaufplans sind zwei
 Bedingungen nötig
 - jeder lokale Ablaufplan muss serialisierbar sein
