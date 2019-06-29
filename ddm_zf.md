@@ -14,13 +14,17 @@ titlepage-rule-height: 1
 
 # Sie können verteilte Datenbank systeme entlang der Dimension Heterogenität, Autonomie und Verteilung klassifizieren
 
-- **Heterogenität**: Hardware, Netzwerkprotokolle,
-Datenverwaltung, Datenmodell, Abfragesprache,
-Transaktionsverwaltung
+- **Heterogenität**: Hardware, Netzwerkprotokolle, Datenverwaltung, Datenmodell,
+  Abfragesprache, Transaktionsverwaltung
+  - Eine Datenbank und viele Instanzen der selben Applikation die darauf zugreifen -> Homogen (Wikipedia)
+  - Eine oder mehrere Datenbanken und viele verschiedene Applikation die darauf zugreifen -> Heterogen (Wikipedia)
+    - z.B. Fachapplikationen welche vielfälltige Daten verwalten
   - 2 Ausprägungen: homogen, heterogen
 - **Verteilung**: betrifft die Verteilung der Daten
   - 3 Ausprägungen: zentral, client/server, verteilt
 - **Autonomie**: betrifft die Verteilung der Steuerung
+  - Bezeichnet den Grad, zu dem verschiedene miteinander verbundene DBMS unabhängig voneinander
+    operieren können (Wikipedia).
   - 3 Ausprägungen: stark integriert, halbautonom, isoliert
 
 # Sie kennen die 12 Regeln für verteilte Datenbanksysteme von Chris Date
