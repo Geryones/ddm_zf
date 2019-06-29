@@ -187,17 +187,16 @@ Für diese Folien siehe Anhang.
 # Sie kennen die Korrektheitsregeln für eine Fragmentierung und können sie auf ein Beispiel anwenden.
 
 - **vollständigkeit**
-  - wenn R zerlegt wird in R1, R2, . . . , Rn, dann muss jedes Datenelement
-aus R in einem Ri enthalten sein.
+  - wenn R zerlegt wird in R~1~, R~2~, . . . , R~n~, dann muss jedes Datenelement
+aus R in einem R~i~ enthalten sein.
 - **rekonstruierbar**
-  - wenn R zerlegt wird in R1, R2, . . . , Rn, dann muss es relationale
+  - wenn R zerlegt wird in R~1~, R~2~, . . . , R~n~, dann muss es relationale
 Operatoren geben, so dass R wiederhergestellt werden kann.
 - **disjunkt**
-  - wenn R horizontal zerlegt wird in R1, R2, . . . , Rn, dann müssen die
-Fragmente paarweise disjunkt sein.
-wenn R vertikal zerlegt wird in R1, R2, . . . , Rn, dann müssen die
-Fragmente bezogen auf die nichtprimen Attribute paarweise
-disjunkt sein.
+  - wenn R horizontal zerlegt wird in R~1~, R~2~, . . . , R~n~, dann müssen die
+    Fragmente paarweise disjunkt sein.
+  - wenn R vertikal zerlegt wird in R~1~, R~2~, . . . , R~n~, dann müssen die Fragmente
+    bezogen auf die nichtprimen Attribute paarweise disjunkt sein.
 
 # Sie können die verschiedenen Phasen einer verteilten Anfrageverarbeitung beschreiben.
 
