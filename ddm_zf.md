@@ -134,36 +134,37 @@ Finden einer Menge von simple predicates die Vollständig und Minimal sind:
   Bestimmung einer Fragmentierung. Sind alle simple predicate eine Menge P
   relevant, dann ist P minimal
 
-## PHF - 2. Schritt 
+## PHF - 2. Schritt
 
-Bilden von minterms
-**Anwendung 1**
-Erfragt Namen und Bestand von Bikes nach Typ: City (4/Woche),
-Trekking (3/Woche), Mountain (2/Woche), Road (1/Woche) \newline
+- **Anwendung 1**
+  - Erfragt Namen und Bestand von Bikes nach Typ: City (4/Woche), Trekking (3/Woche), Mountain (2/Woche), Road (1/Woche) \newline
 
-``` 
+```
 SELECT bname, bestand
 FROM bike s
 WHERE typ = ?
 ```
-simple predicates:
-- p1: Typ = 'Road'
-- p2: Typ = 'Mountain'
-- p3: Typ = 'Trekking'
-- p4: Typ = 'City'
 
-**Anwendung 2**
-Verwaltet Bikes mit Preis kleiner 2000 (3/Woche), die restlichen
-Bikes (1/Woche):\newline
-```SQL
+- Simple predicates:
+  - p1: Typ = 'Road'
+  - p2: Typ = 'Mountain'
+  - p3: Typ = 'Trekking'
+  - p4: Typ = 'City'
+
+- **Anwendung 2**
+  - Verwaltet Bikes mit Preis kleiner 2000 (3/Woche), die restlichen Bikes (1/Woche):\newline
+
+```
 SELECT * FROM bike s WHERE preis?
 ```
-simple predicates:
-- p5: Preis < 2000
-- p6: Preis >= 2000
+
+- Simple predicates:
+  - p5: Preis < 2000
+  - p6: Preis >= 2000
 
 Aus diesen 6 simple predicates könnten 2^6 = 64 minterm predicates gebildet werden.
 Nur die sinnvollen verwenden, diese definieren dann die Fragmente:
+
 - BIKES1: Typ = 'Road' AND Preis 6 2000 (BIKES)
 - BIKES2: Typ = 'Road' AND Preis > 2000 (BIKES)
 - BIKES3: Typ = 'Mountain' AND Preis 6 2000 (BIKES)
