@@ -9,8 +9,6 @@ titlepage-color: "06386e"
 titlepage-text-color: "FFFFFF"
 titlepage-rule-color: "FFFFFF"
 titlepage-rule-height: 1
-header-includes: |
-	\usepackage[margin=0.5in]{geometry}
 ---
 \newpage
 
@@ -66,7 +64,7 @@ DROP VIEW filme;
 -- Namenstransparenz
 CREATE SYNONYM filme FOR filme@ganymed.sirius.fhnw.ch;
 
---link zu anderem Datenbankserver
+-- Link zu anderem Datenbankserver
 CREATE DATABASE LINK ganymed.sirius.fhnw.ch
 CONNECT TO ddm61 IDENTIFIED BY ddm61
 USING 'ganymed';
@@ -96,6 +94,9 @@ USING 'ganymed';
     - Man beginnt mit elementaren Konzepten und den Details
 	- Erstellen von elementaren Konzepten -> Sammlung elementarer Konzepte ->
       Zusammenführen elementarer Konzepte -> Endgültiges Schema
+
+
+
 ![Entwurfsproblem - Lösung](pics/entwurfsproblem.PNG "hm")
 
 # Sie können eine primäre horizontale Fragmentierung (PHF) durchführen
@@ -133,36 +134,37 @@ Finden einer Menge von simple predicates die Vollständig und Minimal sind:
   Bestimmung einer Fragmentierung. Sind alle simple predicate eine Menge P
   relevant, dann ist P minimal
 
-## PHF - 2. Schritt 
+## PHF - 2. Schritt
 
-Bilden von minterms
-**Anwendung 1**
-Erfragt Namen und Bestand von Bikes nach Typ: City (4/Woche),
-Trekking (3/Woche), Mountain (2/Woche), Road (1/Woche) \newline
+- **Anwendung 1**
+  - Erfragt Namen und Bestand von Bikes nach Typ: City (4/Woche), Trekking (3/Woche), Mountain (2/Woche), Road (1/Woche) \newline
 
-``` 
+```
 SELECT bname, bestand
 FROM bike s
 WHERE typ = ?
 ```
-simple predicates:
-- p1: Typ = 'Road'
-- p2: Typ = 'Mountain'
-- p3: Typ = 'Trekking'
-- p4: Typ = 'City'
 
-**Anwendung 2**
-Verwaltet Bikes mit Preis kleiner 2000 (3/Woche), die restlichen
-Bikes (1/Woche):\newline
-```SQL
+- Simple predicates:
+  - p1: Typ = 'Road'
+  - p2: Typ = 'Mountain'
+  - p3: Typ = 'Trekking'
+  - p4: Typ = 'City'
+
+- **Anwendung 2**
+  - Verwaltet Bikes mit Preis kleiner 2000 (3/Woche), die restlichen Bikes (1/Woche):\newline
+
+```
 SELECT * FROM bike s WHERE preis?
 ```
-simple predicates:
-- p5: Preis < 2000
-- p6: Preis >= 2000
+
+- Simple predicates:
+  - p5: Preis < 2000
+  - p6: Preis >= 2000
 
 Aus diesen 6 simple predicates könnten 2^6 = 64 minterm predicates gebildet werden.
 Nur die sinnvollen verwenden, diese definieren dann die Fragmente:
+
 - BIKES1: Typ = 'Road' AND Preis 6 2000 (BIKES)
 - BIKES2: Typ = 'Road' AND Preis > 2000 (BIKES)
 - BIKES3: Typ = 'Mountain' AND Preis 6 2000 (BIKES)
@@ -206,8 +208,9 @@ Operatoren geben, so dass R wiederhergestellt werden kann.
 
 ## Zerlegung
 
-SQL Query zerlegen und umformen in relationale Algebra unter
-Verwendung des globalen Schemas
+SQL Query zerlegen und umformen in relationale Algebra unter Verwendung des
+globalen Schemas:
+
 - Normalisierung (Bedingung in WHERE Klausel)
 - Analyse, um inkorrekte Queries zurückzuweisen
   - Analyse nach Typ
@@ -228,7 +231,8 @@ mit Fragmenten
 
 ## Globale Optimierung
 
-fnde den besten globalen Ausführungsplan
+Finde den besten globalen Ausführungsplan:
+
 - Kostenfunktion minimieren
 - verteilte Join Verarbeitung
   - Bushy versus Left Deep (Linear) Tree
@@ -351,8 +355,8 @@ werden
   - Sperre von Tj
   - Zyklen im WFG zeigen Deadlocks
 
-- Ansatz: automatisch Deadlocks erkennen und eine betroffene
-Transaktion abbrechen
+- Ansatz: automatisch Deadlocks erkennen und eine betroffene Transaktion
+  abbrechen
 - bevorzugter Ansatz
   - höhere Resourcen Nutzung
   - einfache Verfahren
@@ -453,143 +457,126 @@ Replikat zugreifen.
   - Garantiert einem einzelnen Nutzer konsistenten Zugriff auf Daten
 
 ## Client-Centric Consistency
-
-**Monotonic Reads (gleichbleibend)**
-- Liest ein Prozess Datenelement x, dann gibt jedes nachfolgende
-Lesen von x durch diesen Prozess denselben oder neueren Wert
-zurück
-**Monotonic Writes**
-- Schreiboperation auf Datenelement x ist abgeschlossen, bevor
-derselbe Prozess nachfolgende Schreiboperationen auf x ausführt
-(Serialisierung des Schreibens)
-**Read your Writes**
-- Die Wirkung von Schreiboperation auf Datenelement x wird immer
-in nachfolgenden Leseoperationen auf x durch denselben Prozesse
-gesehen
-**Writes follow Reads**
-- Schreiboperationen auf Datenelement x, die auf ein Lesen durch
-denselben Prozess folgen, überschreiben immer denselben oder
-neueren Wert von x
+- **Monotonic Reads (gleichbleibend)**
+  - Liest ein Prozess Datenelement x, dann gibt jedes nachfolgende Lesen von x
+    durch diesen Prozess denselben oder neueren Wert zurück
+- **Monotonic Writes**
+  - Schreiboperation auf Datenelement x ist abgeschlossen, bevor derselbe
+    Prozess nachfolgende Schreiboperationen auf x ausführt (Serialisierung des
+    Schreibens)
+- **Read your Writes**
+  - Die Wirkung von Schreiboperation auf Datenelement x wird immer in
+    nachfolgenden Leseoperationen auf x durch denselben Prozesse gesehen
+- **Writes follow Reads**
+  - Schreiboperationen auf Datenelement x, die auf ein Lesen durch denselben
+    Prozess folgen, überschreiben immer denselben oder neueren Wert von x
 
 # Sie können die verschiedenen Update Propagation Strategien beschreiben.
 
-Zeitpunkt der Update Propagation
-- Eager (Synchronous)
-- Lazy (Asynchronous)
-Ort des Updates
-- Primary Copy (Master)
-- Update everywhere (Group)
+- Zeitpunkt der Update Propagation
+  - Eager (Synchronous)
+  - Lazy (Asynchronous)
+- Ort des Updates
+  - Primary Copy (Master)
+  - Update everywhere (Group)
 
 ## Eager / Lazy Replication
 
-**Eager (Synchronous) Replication**
-- Jede Änderung wird sofort zu allen Kopien übertragen
-- Übertragung der Änderungen erfolgt innerhalb der Grenzen der
-Transaktion.
-- ACID Eigenschaften gelten für alle Kopien
+- **Eager (Synchronous) Replication**
+  - Jede Änderung wird sofort zu allen Kopien übertragen
+  - Übertragung der Änderungen erfolgt innerhalb der Grenzen der Transaktion.
+  - ACID Eigenschaften gelten für alle Kopien
 **Lazy (Asynchronous) Replication**
-- Zuerst werden die lokalen Kopien geändert. Anschliessend werden
-die Änderungen zu allen anderen Kopien übertagen (push/pull).
-- Während der Übertragung sind Kopien inkonsistent
-- Zeitraum der Inkonsistenz kann in Abhängigkeit der Anwendung
-angepasst werden
+  - Zuerst werden die lokalen Kopien geändert. Anschliessend werden die Änderungen
+    zu allen anderen Kopien übertagen (push/pull).
+  - Während der Übertragung sind Kopien inkonsistent
+  - Zeitraum der Inkonsistenz kann in Abhängigkeit der Anwendung angepasst werden
 
 ## Master / Group Replication
 
-**Master (Primary Copy) Replication**
-- Es gibt eine einzige Kopie, auf der Änderungen ausgeführt werden
-können (Master)
-- Alle anderen Kopien (Slaves) übernehmen die Änderungen vom
-Master
-- für verschiedene Datenelemente können verschiedene Knoten
-Master sein
-**Group (Update everywhere) Replication**
-- Änderungen können auf jeder Kopie ausgeführt werden.
-- D.h. jeder Knoten, der eine Kopie besitz, kann auf ihr Änderungen
-ausführen.
+- **Master (Primary Copy) Replication**
+  - Es gibt eine einzige Kopie, auf der Änderungen ausgeführt werden können (Master)
+  - Alle anderen Kopien (Slaves) übernehmen die Änderungen vom Master
+  - für verschiedene Datenelemente können verschiedene Knoten Master sein
+- **Group (Update everywhere) Replication**
+  - Änderungen können auf jeder Kopie ausgeführt werden.
+  - D.h. jeder Knoten, der eine Kopie besitz, kann auf ihr Änderungen ausführen.
 
 ## Eager Master (Synchronous Primary Copy) Replication
 
-**Primary Copy**
-- Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
-- Write: lokales Schreiben, Write an alle Slaves weiterleiten (in
-FIFO Reihenfolge oder mit Timestamps), Kontrolle sofort dem
-Nutzer zurückgeben
-- Commit: verwende 2PC als Koordinator
-- Abort: lokales Abort, Slaves informieren
-**Slave**
-- Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
-- Write von Master: ausführen der Writes in richtiger Reihenfolge
-(FIFO oder Timestamp)
-- Write von Client: zurückweisen oder an Master weiterleiten
-- ist Teilnehmer am 2PC der Transaktionen vom Master
+- **Primary Copy**
+  - Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
+  - Write: lokales Schreiben, Write an alle Slaves weiterleiten (in FIFO Reihenfolge oder mit Timestamps), Kontrolle sofort dem Nutzer zurückgeben
+  - Commit: verwende 2PC als Koordinator
+  - Abort: lokales Abort, Slaves informieren
+- **Slave**
+  - Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
+  - Write von Master: ausführen der Writes in richtiger Reihenfolge (FIFO oder Timestamp)
+  - Write von Client: zurückweisen oder an Master weiterleiten
+  - ist Teilnehmer am 2PC der Transaktionen vom Master
 
 ![Eager Master](pics/eagermaster.PNG "hm")
+
 ![Eager Master](pics/eagermaster2.PNG "hm")
 
-**Vorteile**
-- Änderungen müssen nicht koordiniert werden
-- Keine Inkonsistenzen
-**Nachteile**
-- Längste Antwortzeit
-- Nur bei wenigen Updates sinnvoll (Master ist Flaschenhals)
-- Lokale Kopien sind beinahe nutzlos
-- selten eingesetzt
+- **Vorteile**
+  - Änderungen müssen nicht koordiniert werden
+  - Keine Inkonsistenzen
+- **Nachteile**
+  - Längste Antwortzeit
+  - Nur bei wenigen Updates sinnvoll (Master ist Flaschenhals)
+  - Lokale Kopien sind beinahe nutzlos
+  - selten eingesetzt
 
 ## Eager Group (Synchronous Update Everywhere) Replication
 
-Read One Write All (ROWA)
-- jeder Knoten verwendet 2 Phasen Sperrprotokoll
-- Leseoperationen werden lokal durchgeführt
-- Schreiboperationen werden auf allen Knoten ausgeführt mithilfe
-eines verteilten Sperrprotokolls
+- Read One Write All (ROWA)
+  - jeder Knoten verwendet 2 Phasen Sperrprotokoll
+  - Leseoperationen werden lokal durchgeführt
+  - Schreiboperationen werden auf allen Knoten ausgeführt mithilfe eines verteilten Sperrprotokolls
 
 ![Eager Group](pics/eagergroup.PNG "hm")
 
-**Vorteile**
-- Keine Inkonsistenzen
-- elegante Lösung (symmetrisch)
-**Nachteile**
-- Vielzahl von Nachrichten
-- Antwortzeiten der Transaktionen sind sehr lang
-- beschränkte Skalierbarkeit (Deadlock Wahrscheinlichkeit wächst
-mit Anzahl Knoten)
+- **Vorteile**
+  - Keine Inkonsistenzen
+  - elegante Lösung (symmetrisch)
+- **Nachteile**
+  - Vielzahl von Nachrichten
+  - Antwortzeiten der Transaktionen sind sehr lang
+  - beschränkte Skalierbarkeit (Deadlock Wahrscheinlichkeit wächst mit Anzahl Knoten)
 
 ## Lazy Master (Asynchronous Primary Copy)
 
-**Primary Copy**
-- Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
-- Write: lokales Schreiben Kontrolle dem Nutzer zurückgeben
-- Commit, Abort: Transaktion lokal beenden
-- Irgendwann nach dem Commit: an alle Knoten die Änderungen in
-einer einzigen Nachricht übermitteln (FIFO oder Timestamp
-Reihenfolge)
-**Slave**
-- Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
-- Nachricht von Master: Änderungen in richtiger Reihenfolge (FIFO
-oder Timestamp) anwenden
-- Write von Client: zurückweisen oder an Master weiterleiten
-- Commit, Abort: nur für lokale Read-only Transaktionen
+- **Primary Copy**
+  - Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
+  - Write: lokales Schreiben Kontrolle dem Nutzer zurückgeben
+  - Commit, Abort: Transaktion lokal beenden
+  - Irgendwann nach dem Commit: an alle Knoten die Änderungen in einer einzigen
+    Nachricht übermitteln (FIFO oder Timestamp Reihenfolge)
+
+- **Slave**
+   - Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
+   - Nachricht von Master: Änderungen in richtiger Reihenfolge (FIFO
+   oder Timestamp) anwenden
+   - Write von Client: zurückweisen oder an Master weiterleiten
+   - Commit, Abort: nur für lokale Read-only Transaktionen
 
 ![Lazy Master](pics/lazymaster.PNG "hm")
 
-**Vorteile**
-- Keine Koordination nötig
-- kurze Antwortzeiten (Transaktionen sind lokal)
-*Nachteile*
-- lokale Kopien sind nicht aktuell
-- Inkonsistenzen (verschiedene Knoten haben unterschiedliche
-Werte für das gleiche Datenelement)
+- **Vorteile**
+  - Keine Koordination nötig
+  - kurze Antwortzeiten (Transaktionen sind lokal)
+- **Nachteile**
+  - lokale Kopien sind nicht aktuell
+  - Inkonsistenzen (verschiedene Knoten haben unterschiedliche Werte für das gleiche Datenelement)
 
 ## Lazy Group (Asynchronous Update Everywhere) Replication
 
-jeder Knoten
-- Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
-- Write: lokales Schreiben Kontrolle dem Nutzer zurückgeben
-- Commit, Abort: Transaktion lokal beenden
-- Irgendwann nach dem Commit: an alle Knoten die Änderungen in
-einer einzigen Nachricht übermitteln (FIFO oder Timestamp
-Reihenfolge)
+- jeder Knoten
+  - Read: lokales Lesen (eigene Kopie), Resultat zurückgeben
+  - Write: lokales Schreiben Kontrolle dem Nutzer zurückgeben
+  - Commit, Abort: Transaktion lokal beenden
+  - Irgendwann nach dem Commit: an alle Knoten die Änderungen in einer einzigen Nachricht übermitteln (FIFO oder Timestamp Reihenfolge)
 - Nachricht von anderem Knoten:
   - Erkennen von Konflikten
   - Änderungen anwenden
@@ -597,12 +584,12 @@ Reihenfolge)
 
 ![Lazy Group](pics/lazygroup.PNG "hm")
 
-**Vorteile**
-- Keine Koordination nötig
-- kürzeste Antwortzeiten
-**Nachteile**
-- Inkonsistenzen
-- Änderungen könne verloren gehen (Abgleich)
+- **Vorteile**
+  - Keine Koordination nötig
+  - kürzeste Antwortzeiten
+- **Nachteile**
+  - Inkonsistenzen
+  - Änderungen könne verloren gehen (Abgleich)
 
 # Sie können erläutern, wie in Oracle 12c Replikation mit Materialized Views realisiert wird und welcher Replikations Strategie dies entspricht.
 
@@ -638,7 +625,7 @@ Der Output der Map-Funktion ist der Input für Reduce. Diese Typen müssen also 
 ![Word Count with Hadoop](pics/hadoop_2.JPG "hm")
 
 
-``` Java
+``` java
 public static class MyMapper extends Mapper<LongWritable, Text, LongWritable, Text>{
   private Text word = new Text();
 
@@ -698,14 +685,15 @@ Nicht mehr Relationales Datenmodell, verwendet nicht Tables im klassischen Sinn.
 Da keine Joins und Group By möglich sind, können die gewünschten Daten nicht immer mit einem einzigen Query abgefragt werden. 
 Es kann durchaus zu Redundanzen kommen, was aber nicht weiter schlimm ist. 
 
-Beispiel von Relational zu einem Cassandra Model: 
+Beispiel von Relational zu einem Cassandra Model:
+
 ![Relational](pics/cass_rel.JPG "hm")
 
 ![Cassandra](pics/cass.JPG "hm")
 
 Beim Modelieren einer Datenbank muss klar sein, wie die Queries aussehen. \newline
 
-```SQL
+```
 CREATE KEYSPACE music;
 use music;
 
