@@ -727,8 +727,8 @@ Für jedes Jahr (Year) wird eine neue Partition erstellt.
 
 ![RDBMS](pics/cass_rdbms.PNG "hm")
 
-<<CF>> ist eine Column-Family
-<<SCF>> ist eine Super-Coumn-Family
+\<\<CF\>\> ist eine Column-Family
+\<\<SCF\>\> ist eine Super-Coumn-Family
 
 # Sie können mit CQL Datendefinitionen realisieren und Anfragen formulieren.
 
