@@ -106,6 +106,7 @@ USING 'ganymed';
 ## Simple predicate p
 
 Vergleich von einem Attribut mit einem Wert
+
 - bname = 'Siena', preis < 2000
 
 Sind bool'sche Kombinationen von simple Predicates
@@ -113,9 +114,11 @@ Sind bool'sche Kombinationen von simple Predicates
 ## Minterm predicate M(P)
 
 Verknüpfen aller simple predicates aus P mit AND und NOT
+
 - bname = 'Siena', AND NOT (preis <2000)
 
 Mit den Minterms müssen alle Daten abgedeckt werden.
+
 - Minterm selectivity: sel(m~i~)
   - Anzahl Tupel die mit dem Minterm m~i~ ausgewählt werden
 - Access Frequency acc(m~i~)
@@ -165,14 +168,14 @@ SELECT * FROM bike s WHERE preis?
 Aus diesen 6 simple predicates könnten 2^6 = 64 minterm predicates gebildet werden.
 Nur die sinnvollen verwenden, diese definieren dann die Fragmente:
 
-- BIKES1: Typ = 'Road' AND Preis 6 2000 (BIKES)
-- BIKES2: Typ = 'Road' AND Preis > 2000 (BIKES)
-- BIKES3: Typ = 'Mountain' AND Preis 6 2000 (BIKES)
-- BIKES4: Typ = 'Mountain' AND Preis > 2000 (BIKES)
-- BIKES5: Typ = 'Trekking' AND Preis 6 2000 (BIKES)
-- BIKES6: Typ = 'Trekking' AND Preis > 2000 (BIKES)
-- BIKES7: Typ = 'City' AND Preis 6 2000 (BIKES)
-- BIKES8: Typ = 'City' AND Preis > 2000 (BIKES)
+- BIKES1: Typ = 'Road' AND Preis < 2000 (BIKES)
+- BIKES2: Typ = 'Road' AND Preis >= 2000 (BIKES)
+- BIKES3: Typ = 'Mountain' AND Preis < 2000 (BIKES)
+- BIKES4: Typ = 'Mountain' AND Preis >= 2000 (BIKES)
+- BIKES5: Typ = 'Trekking' AND Preis < 2000 (BIKES)
+- BIKES6: Typ = 'Trekking' AND Preis >= 2000 (BIKES)
+- BIKES7: Typ = 'City' AND Preis < 2000 (BIKES)
+- BIKES8: Typ = 'City' AND Preis >= 2000 (BIKES)
 
 ## Abgeleitete horizontale Fragementierung (DHF)
 
@@ -275,7 +278,7 @@ Systemen
 # Sie kennen die Aspekte der Transaktionsverarbeitung in verteilten Datenbanksystemen.
 
 - Transaktionsstruktur (Transaktionsmodell)
-  - fache Transaktion, verschachtelte Transaktion
+  - flache Transaktion, verschachtelte Transaktion
 - Konsistenzerhaltung der Datenbank
 - Zuverlässigkeitsprotokolle
   - Unteilbarkeit, Dauerhaftigkeit
@@ -598,12 +601,12 @@ Replikat zugreifen.
 
 # Sie kennen die Kategorisierung der NoSQL Systeme mit den typischen Vertretern.
 
-|Kategorie | Beispiele |
-|:--------|:------------|
-|Dokumentenorientiert |Apache Jackrabbit, MongoDB, OrientDB ...|
-|Graphdatenbanken |Neo4j, OrientDB, ...|
-|Key-Value-Datenbanken | Google BigTable, Amazon Dynamo, memcached, ...|
-|Spaltenorientiere Datenbanken |Apache Cassandra, Google BigTable|
+| Kategorie                     | Beispiele                                      |
+| :---------------------------- | :--------------------------------------------- |
+| Dokumentenorientiert          | Apache Jackrabbit, MongoDB, OrientDB ...       |
+| Graphdatenbanken              | Neo4j, OrientDB, ...                           |
+| Key-Value-Datenbanken         | Google BigTable, Amazon Dynamo, memcached, ... |
+| Spaltenorientiere Datenbanken | Apache Cassandra, Google BigTable              |
 
 
 # Sie können das CAP-Theorem erläutern.
@@ -631,7 +634,7 @@ public static class MyMapper extends Mapper<LongWritable, Text, LongWritable, Te
 
   @Override
   public void map(LongWritable\ key, Text\ value, Context context) throws IOException, InterruptedException {
-         String line =\ value.toString();
+         String line = value.toString();
          StringTokenizer tokenizer = new StringTokenizer(line);
          while (tokenizer.hasMoreTokens()) {
              word.set(tokenizer.nextToken());
@@ -650,7 +653,7 @@ public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable>
        for (IntWritable val : values) {
            sum += val.get();
        }
-       context.write\(key, new IntWritable(sum));
+       context.write(key, new IntWritable(sum));
    }
 }
 ```
@@ -670,15 +673,15 @@ public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable>
 
 Nicht mehr Relationales Datenmodell, verwendet nicht Tables im klassischen Sinn. 
 
-|Relational Model | Cassandra|
-|:--------|:------------|
-|Database |Keyspace|
-|Table |Column Family (CF)|
-|Primary Key |Row Key|
-|Column name |Column name\/key|
-|Column\ value |Column\ value|
+| Relational Model | Cassandra          |
+| :--------------- | :----------------- |
+| Database         | Keyspace           |
+| Table            | Column Family (CF) |
+| Primary Key      | Row Key            |
+| Column name      | Column name key   |
+| Column value     | Column value       |
 
-> > But don’t use this analogy while designing Cassandra column families. Instead, think of the Cassandra column family as a map of a map: an outer map keyed by a row\ key, and an inner map keyed by a column\ key. Both maps are sorted.
+> > But don’t use this analogy while designing Cassandra column families. Instead, think of the Cassandra column family as a map of a map: an outer map keyed by a row\ key, and an inner map keyed by a column key. Both maps are sorted.
 
 ![Cassandra Model](pics/cassandra.JPG "hm")
 
@@ -703,13 +706,13 @@ Create Table MusicPlaylist
       SongName text,
       Year int,
       Singer text,
-      Primary\ key((SongId, Year), SongName)
+      Primary key((SongId, Year), SongName)
   );
 
 -- Simple Column Family
 Create table Course_Student
     (
-        Course_name text primary\ key,
+        Course_name text primary key,
         Student_name text,
         student_rollno int
     );
@@ -731,15 +734,15 @@ Für jedes Jahr (Year) wird eine neue Partition erstellt.
 
 ## 5 Regeln für Query Model
 
-1. Only primary\ key columns may be used in a query predicate.
-2. All partition\ key columns must be restricted by values (i.e. equality search).
-3. All, some, or none of the clustering\ key columns can be used in a query predicate.
-4. If a clustering\ key column is used in a query predicate, then all clustering\ key columns
-that precede this clustering column in the primary\ key definition must also be used in
+1. Only primary key columns may be used in a query predicate.
+2. All partition key columns must be restricted by values (i.e. equality search).
+3. All, some, or none of the clustering key columns can be used in a query predicate.
+4. If a clustering key column is used in a query predicate, then all clustering key columns
+that precede this clustering column in the primary key definition must also be used in
 the predicate.
-5. If a clustering\ key column is restricted by range (i.e. inequality search) in a query
-predicate, then all clustering\ key columns that precede this clustering column in the
-primary\ key definition must be restricted by values and no other clustering column
+5. If a clustering key column is restricted by range (i.e. inequality search) in a query
+predicate, then all clustering key columns that precede this clustering column in the
+primary key definition must be restricted by values and no other clustering column
 can be used in the predicate. \newline
 
 ```SQL
@@ -756,14 +759,14 @@ Select * from MusicPlaylist where year = 2000 and SongId = 1000;
 
 # Sie können Datenmodelle für MongoDB entwerfen und kennen die verschiedenen Dartellungsmöglichkeiten von Beziehungen.
 
-|Relational Model | MongoDB |
-|:--------|:------------|
-|Database |Database|
-|Table |Collection|
-|Tuple / Row | Document|
-|Primary Key |Primary Key (Default: Key_id, wird von mongoDB selbst generiert)|
-|Column | Field |
-|Table Join | Embedded Documents|
+| Relational Model | MongoDB                                                          |
+| :--------------- | :--------------------------------------------------------------- |
+| Database         | Database                                                         |
+| Table            | Collection                                                       |
+| Tuple / Row      | Document                                                         |
+| Primary Key      | Primary Key (Default: Key_id, wird von mongoDB selbst generiert) |
+| Column           | Field                                                            |
+| Table Join       | Embedded Documents                                               |
 
 - Beim Entwerfen der Datenbank soll man sich an den Queries onrientieren. 
 - Wenn verschiedene Objekte zusammen abgefragt werden, sollen diese auch in ein Dokument geschrieben werden. 
@@ -945,14 +948,14 @@ Gesucht wird hauptsächlich mit 2 Methoden:
 
 Mit der Funktion pretty() erhält man eine schöne Darstellung, ist aber nicht zwingend. 
 
-|Operation|	Syntax|	Example | RDBMS Equivalent|
-|:--------|:------------|:-------------|:----------|
-|Equality	          |\{\<key>:\<value>\}           |db.mycol.find(\{"by":"tutorials point"\})	|where by = 'tutorials point'|
-|Less Than            |\{\<key>:\{\$lt:\<value>\}\}  |db.mycol.find(\{"likes" : \{\$lt:50\}\})	   |where likes < 50            |
-|Less Than Equals     |\{\<key>:\{\$lte:\<value>\}\} |db.mycol.find(\{"likes" : \{\$lte:50\}\})	|where likes <= 50           |
-|Greater Than	       |\{\<key>:\{\$gt:\<value>\}\}  |db.mycol.find(\{"likes" : \{\$gt:50\}\})	   |where likes > 50            |
-|Greater Than Equals  |\{\<key>:\{\$gte:\<value>\}\} |db.mycol.find(\{"likes" : \{\$gte:50\}\})   |where likes >= 50           |
-|Not Equals           |\{\<key>:\{\$ne:\<value>\}\}  |db.mycol.find(\{"likes" : \{\$ne:50\}\})    |where likes != 50           |
+| Operation           | Syntax                        | Example                                   | RDBMS Equivalent             |
+| :------------------ | :---------------------------- | :---------------------------------------- | :--------------------------- |
+| Equality            | \{\<key>:\<value>\}           | db.mycol.find(\{"by":"tutorials point"\}) | where by = 'tutorials point' |
+| Less Than           | \{\<key>:\{\$lt:\<value>\}\}  | db.mycol.find(\{"likes" : \{\$lt:50\}\})  | where likes < 50             |
+| Less Than Equals    | \{\<key>:\{\$lte:\<value>\}\} | db.mycol.find(\{"likes" : \{\$lte:50\}\}) | where likes <= 50            |
+| Greater Than        | \{\<key>:\{\$gt:\<value>\}\}  | db.mycol.find(\{"likes" : \{\$gt:50\}\})  | where likes > 50             |
+| Greater Than Equals | \{\<key>:\{\$gte:\<value>\}\} | db.mycol.find(\{"likes" : \{\$gte:50\}\}) | where likes >= 50            |
+| Not Equals          | \{\<key>:\{\$ne:\<value>\}\}  | db.mycol.find(\{"likes" : \{\$ne:50\}\})  | where likes != 50            |
 
 
 ### AND
@@ -1045,20 +1048,20 @@ xml
 </rdf:RDF>
 ```
 
-|Property | Description |
-|:--------|:------------|
-|rdf:type |The subject is an instance of a class.|
-|rdf:type |The subject is an instance of a class.|
-|rdf:Statement |The class of RDF statements.|
-|rdf:Property |The class of RDF properties.|
-|rdf:subject |The subject of the subject RDF statement.|
-|rdf:predicate |The predicate of the subject RDF statement.|
-|rdf:object |The object of the subject RDF statement.|
-|rdfs:Class |The class of classes.|
-|rdfs:domain |A domain of the subject property.|
-|rdfs:range |A range of the subject property.|
-|rdfs:subClassOf |The subject is a subclass of a class.|
-|rdfs:subPropertyOf |The subject is a subproperty of a property.|
-|rdfs:Ressource |The class resource, everything.|
+| Property           | Description                                 |
+| :----------------- | :------------------------------------------ |
+| rdf:type           | The subject is an instance of a class.      |
+| rdf:type           | The subject is an instance of a class.      |
+| rdf:Statement      | The class of RDF statements.                |
+| rdf:Property       | The class of RDF properties.                |
+| rdf:subject        | The subject of the subject RDF statement.   |
+| rdf:predicate      | The predicate of the subject RDF statement. |
+| rdf:object         | The object of the subject RDF statement.    |
+| rdfs:Class         | The class of classes.                       |
+| rdfs:domain        | A domain of the subject property.           |
+| rdfs:range         | A range of the subject property.            |
+| rdfs:subClassOf    | The subject is a subclass of a class.       |
+| rdfs:subPropertyOf | The subject is a subproperty of a property. |
+| rdfs:Ressource     | The class resource, everything.             |
 
 Als Beispiel kann man Google nehmen. Wir können eine Beziehung zwischen Daten beschreiben und Google versteht es. Zum Beispiel Author_of %BuchTitle% liefert den gesuchten Author. 

@@ -1,1 +1,1 @@
-pandoc ddm_zf.md -o ddm_zf.pdf --from markdown --listings --number-sections -V lang=de --toc --include-in-header header.tex
+pandoc ddm_zf.md -o ddm_zf.pdf --from markdown --listings --number-sections -V lang=de --toc --include-in-header header.tex --pdf-engine=xelatex
